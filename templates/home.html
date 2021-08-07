@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Great!&nbsp;</strong>{{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+<div class="btn-group" role="group">
+    <a href="{% url 'remove_all' %}"><button type="button" class="btn btn-primary">ADD ITEMS FOR NEXT SHOPPING</button></a>
+</div>
+<div class="flex-container">
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Delete Item</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <th scope="row"><a href="{% url 'delete_item' item.itemid%}"><i style="font-size:24px" class="fa">&#xf014;</i></a></th>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.quantity }}</td>
+                    {% if item.bought %}
+                    <td style="color: green;"><a href="{% url 'mark_pending' item.itemid %}"><button type="button" class="btn btn-primary">DONE</button></a></td>
+                    {% else %}
+                    <td style="color: red;"><a href="{% url 'mark_done' item.itemid %}"><button type="button" class="btn btn-danger">PENDING...</button></a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <h3>Add Item</h3>
+            <div class="mb-3">
+                <label class="form-label">Item</label>
+                <input name="item" type="text" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Quantity</label>
+                <input name="quantity" type="number" class="form-control" value="1">
+            </div>
+            <button type="submit" class="btn btn-primary">ADD</button>
+        </form>
+        
+    </div>
+</div>
+{% block style %}
+<style>
+    .fa{
+        margin-left: 13px;
+        margin-top: 2px;
+    }
+    .btn-group{
+        margin-bottom: -65px;
+    }
+    .flex-container {
+        display: flex;
+        /* background-color: DodgerBlue; */
+        margin-top: 60px;
+        /* flex-wrap: wrap; */
+    }
+    .flex-container > div {
+        /* background-color: #f1f1f1; */
+        margin: 10px;
+        padding: 20px;
+        font-size: 30px;
+    }
+    .flex-container > div:first-child{
+        width: 75%;
+    }
+    .flex-container > div:last-child{
+        width: 25%;
+    }
+</style>
+{% endblock %}
+{% endblock %}
